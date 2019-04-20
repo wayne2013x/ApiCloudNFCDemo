@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面字符编码 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>应用首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/ydui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <script type="text/javascript" src="../script/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../script/ydui.flexible.js"></script>
+    <script type="text/javascript" src="../script/ydui.js"></script>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        var api_url = "http://192.168.0.199/Core/Assets/AssetsAPI.ashx"
+        var androidNfc;
+        apiready = function() {
+            $('body').css('padding-top', '20px');
+            androidNfc = api.require('androidNfc');
+            $("#assets_no").focus();
+        };
+
+        function fnReadCardNo() {
+            api.showProgress({
+                title: "正在读取数据中...",
+                text: '请稍等...'
+            });
+            androidNfc.nfcGetId(function(ret, err) {
+                var lid = '';
+                if (ret.status) {
+                    //alert(JSON.stringify("读取的卡号：" + ret.cardId));
+                    lid = ret.cardId;
+                    api.ajax({
+                        url: api_url,
+                        data: {
+                            values: {
+                                type: 'GetByLabel',
+                                label_id: ret.cardId
+                            }
+                        },
+                        timeout: 10,
+                        dataType: 'json',
+                        method: 'post'
+                    }, function(ret, err) {
+                        if (ret.length > 0) {
+                            alert("该标签已被绑定!");
+                        }else{
+                          $('#labelId').val(lid);
+                        }
+                    });
+
+                } else {
+                    console.log(JSON.stringify(err));
+                    alert(JSON.stringify("错误信息：" + err.msg));
+                }
+
+
+            });
+              //取消loading
+            api.hideProgress();
+        }
+
+        function GetInfo() {
+
+            //alert(assets_noValue);
+            if ($('#assets_no').val().length < 10)
+                return;
+            api.showProgress({
+                title: "查询数据中...",
+                text: '请稍等...'
+            });
+            var assets_noValue = $('#assets_no').val();
+            api.ajax({
+                url: api_url,
+                data: {
+                    values: {
+                        type: 'GetByNo',
+                        assets_no: assets_noValue
+                    }
+                },
+                timeout: 10,
+                dataType: 'json',
+                method: 'post'
+            }, function(ret, err) {
+                //取消loading
+                api.hideProgress();
+                if (ret.length > 0) {
+                    var data = ret[0];
+                    //alert(data.label_id);
+                    if (data.label_id != '') {
+                        alert("该资产已绑定标签！");
+                        $('#assets_no').val("");
+                        return;
+                    }
+                    $('#assets_name').val(data.assets_name);
+                    $("#spec").val(data.spec);
+                    $('#brand').val(data.brand);
+                    $("#description").val(data.description);
+                    $("#color").val(data.color);
+                } else {
+                    alert("查询无此资产!");
+                    $('#assets_no').val("");
+                }
+            });
+
+        }
+
+        function CheckLabel() {
+
+        }
+
+        function updateLabel() {
+            var assets_noVal = $("#assets_no").val();
+            var label_idVal = $('#labelId').val();
+            if (assets_noVal == "") {
+                alert("请输入资产编号!");
+                return;
+            }
+            if (label_idVal == "") {
+                alert("请输入标签ID!");
+                return;
+            }
+
+            // 加载loading
+            api.showProgress({
+                title: "提交数据中...",
+                text: '请稍等...'
+            });
+            //alert(assets_no);
+            //alert(label_id);
+            api.ajax({
+                url: api_url,
+                data: {
+                    values: {
+                        type: 'EditLabel',
+                        assets_no: assets_noVal,
+                        label_id: label_idVal
+                    }
+                },
+                timeout: 10,
+                dataType: 'json',
+                method: 'post'
+            }, function(ret, err) {
+                //取消loading
+                api.hideProgress();
+                alert(ret.msg);
+                if (ret.result) {
+                    $("#assets_no").val("");
+                    $('#labelId').val("");
+                    $('#assets_name').val("");
+                    $("#spec").val("");
+                    $('#brand').val("");
+                    $("#description").val("");
+                    $("#color").val("");
+                }
+
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <header class="m-navbar">
+        <a href="#" class="navbar-item" onclick="api.closeWin();">
+            <i class="back-ico"></i>返回
+        </a>
+        <div class="navbar-center">
+            <span class="navbar-title">资产登记</span>
+        </div>
+    </header>
+    <div class="m-cell">
+        <div class="cell-item">
+            <div class="cell-left"><span style="color:red">*</span>资产编号：</div>
+            <div class="cell-right"><input id='assets_no' type="text" class="cell-input" autocomplete="off" onchange="GetInfo()" /></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left">资产名称：</div>
+            <div class="cell-right"><input id='assets_name' type="text" class="cell-input" autocomplete="off" readonly="readonly" /></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left">型号/规格：</div>
+            <div class="cell-right"><input type="text" id='spec' class="cell-input" autocomplete="off" readonly="readonly" /></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left">颜色：</div>
+            <div class="cell-right"><input type="text" id='color' class="cell-input" autocomplete="off" readonly="readonly" /></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left">品牌：</div>
+            <div class="cell-right"><input type="text" id='brand' class="cell-input" autocomplete="off" readonly="readonly" /></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left">功能描述：</div>
+            <div class="cell-right"><input type="text" id='description' class="cell-input" autocomplete="off" readonly="readonly" /></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left"><span style="color:red">*</span>标签ID：</div>
+            <div class="cell-right">
+                <input type="text" id="labelId" class="cell-input" placeholder="" autocomplete="off" readonly="readonly" onchange="CheckLabel()" />
+                <a href="javascript:;" class="btn btn-warning" onclick="fnReadCardNo()">读取标签</a>
+            </div>
+        </div>
+    </div>
+    <div style="width:96%;margin:0 auto;">
+        <button type="button" class="btn-block btn-primary" onclick="updateLabel()">确定添加</button>
+    </div>
+</body>
+
+</html>

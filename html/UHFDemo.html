@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面字符编码 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>应用首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/ydui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <script type="text/javascript" src="../script/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../script/ydui.flexible.js"></script>
+    <script type="text/javascript" src="../script/ydui.js"></script>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        var api_url = "http://192.168.0.199/Core/Assets/AssetsAPI.ashx"
+        var moduleUHF;
+        apiready = function() {
+            $('body').css('padding-top', '20px');
+            moduleUHF = api.require('moduleUHF');
+            //moduleUHF.startActivity();
+        };
+
+        function fnReadCardNo() {
+          alert(12213);
+            var params = {
+                startIndex: 0,
+                length: 6
+            };
+            moduleUHF.readUHF(params, function(ret, err) {
+                if (ret) {
+                    var data = ret.data;
+                    console.log(JSON.stringify(data));
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <header class="m-navbar">
+        <a href="#" class="navbar-item" onclick="api.closeWin();">
+            <i class="back-ico"></i>返回
+        </a>
+        <div class="navbar-center">
+            <span class="navbar-title">UDF</span>
+        </div>
+    </header>
+    <div class="m-cell">
+        <div class="cell-item">
+            <div class="cell-left"><span style="color:red">*</span>标签Id:</div>
+            <div class="cell-right"><input id='label_id' type="text" class="cell-input" autocomplete="off" readonly="readonly" />
+                <a href="javascript:;" class="btn btn-warning" onclick="fnReadCardNo()">读取标签</a></div>
+        </div>
+        <div class="cell-item">
+            <div class="cell-left">标签内容</div>
+            <div class="cell-right"><input id='label_content' type="text" class="cell-input" autocomplete="off" readonly="readonly" />
+                <a href="javascript:;" class="btn btn-warning" onclick="fnReadCardContent()">读取标签</a></div>
+        </div>
+
+</body>
+
+</html>

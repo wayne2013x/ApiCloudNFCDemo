@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面字符编码 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>应用首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/ydui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <script type="text/javascript" src="../script/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../script/ydui.flexible.js"></script>
+    <script type="text/javascript" src="../script/ydui.js"></script>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <style>
+        .navbar-title {
+            font-weight: bold;
+        }
+
+        .grids-txt {
+            font-size: 16px;
+            margin-top: 16px
+        }
+    </style>
+    <script type="text/javascript">
+        apiready = function() {
+            $('.headerClass').css('margin-top', '4px');
+            $('body').css('padding-top', '25px');
+        }
+        //资产登记
+        function fnOpenAssetsAddWin() {
+            api.closeWin({
+                name: 'add'
+            });
+            api.openWin({
+                name: 'add',
+                url: 'assets_add.html',
+                bounces: false
+            });
+        }
+        //借调领用
+        function fnOpenAssetsOutWin() {
+            api.closeWin({
+                name: 'add'
+            });
+            api.openWin({
+                name: 'add',
+                url: 'assets_out.html',
+                bounces: false
+            });
+        }
+        //归还管理
+        function fnOpenAssetsInWin() {
+            api.closeWin({
+                name: 'add'
+            });
+            api.openWin({
+                name: 'add',
+                url: 'assets_in.html',
+                bounces: false
+            });
+        }
+
+        //超高频
+        function fnUHFDemoWin() {
+            api.closeWin({
+                name: 'add'
+            });
+            api.openWin({
+                name: 'add',
+                url: 'UHFDemo.html',
+                bounces: false
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <header class="m-navbar">
+        <div class="navbar-center">
+            <span class="navbar-title">资产管理</span>
+        </div>
+    </header>
+    <div class="m-grids-3">
+        <a href="#" class="grids-item" onclick="fnOpenAssetsAddWin()">
+            <div class="grids-icon"><img src="../icon/record.png"></div>
+            <div class="grids-txt"><span>资产登记</span></div>
+        </a>
+        <a href="#" class="grids-item" onclick="fnOpenAssetsOutWin()">
+            <div class="grids-icon"><img src="../icon/out1.png"></div>
+            <div class="grids-txt"><span>借调领用</span></div>
+        </a>
+        <a href="#" class="grids-item" onclick="fnOpenAssetsInWin()">
+            <div class="grids-icon"><img src="../icon/in5.png"></div>
+            <div class="grids-txt"><span>归还管理</span></div>
+        </a>
+    </div>
+    <div class="m-grids-3">
+        <a href="#" class="grids-item" onclick="fnUHFDemoWin()">
+            <div class="grids-icon"><img src="../icon/NFC.png"></div>
+            <div class="grids-txt"><span>超高频</span></div>
+        </a>
+    </div>
+</body>
+
+</html>

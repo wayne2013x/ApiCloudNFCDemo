@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面字符编码 -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>应用首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/ydui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <script type="text/javascript" src="../script/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../script/ydui.flexible.js"></script>
+    <script type="text/javascript" src="../script/ydui.js"></script>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            $('.headerClass').css('margin-top', '1px');
+            $('body').css('padding-top', '20px');
+            var androidNfc = api.require('androidNfc');
+            $('#readId').click(function(){
+              androidNfc.nfcGetId(function(ret, err) {
+                    if (ret.status) {
+                        //console.log(JSON.stringify(ret));
+                        alert(JSON.stringify("读取的卡号：" + ret.cardId));
+                        $('#cardId').innerHTML = ret.cardId;
+                    } else {
+                        console.log(JSON.stringify(err));
+                        alert(JSON.stringify("错误信息：" + err.msg));
+                    }
+                });
+            });
+            $('#readContent').click(function(){
+              androidNfc.nfcRead(function( ret, err ){
+    if (ret.status) {
+        console.log(JSON.stringify(ret));
+        alert(JSON.stringify("读取的结果：" + ret.readResult));
+    } else {
+        console.log(JSON.stringify(err));
+        alert(JSON.stringify("错误信息：" + err.msg));
+    }
+});
+            });
+
+
+        };
+    </script>
+</head>
+
+<body>
+
+    <header class="m-navbar">
+        <div class="navbar-center">
+            <span class="navbar-title">Demo</span>
+        </div>
+
+    </header>
+    <div>
+        <button id='readId' type="button" class="btn-block btn-primary">读取卡号</button>
+    </div>
+    <div>
+        <button id='readContent' type="button" class="btn-block btn-warning">读取内容</button>
+    </div>
+    <div class="m-cell">
+        <div class="cell-item">
+            <div class="cell-left">标签ID:</div>
+            <div id='cardId' class="cell-right">123</div>
+        </div>
+    </div>
+
+    <div class="m-cell">
+        <div class="cell-item">
+            <div class="cell-left">标签内容:</div>
+            <div id='cardContent' class="cell-right"></div>
+        </div>
+    </div>
+</body>
+
+</html>

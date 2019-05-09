@@ -1,2 +1,4 @@
-# ApiCloudNFCDemo
-运用ApiCloud开发的NFCDemo 仅支持Android
+# 基于NFC/UHF标签的资产管理手持PDA
+运用ApiCloud框架
+运用NFC/UHF射频技术
+

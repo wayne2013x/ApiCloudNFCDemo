@@ -15,7 +15,6 @@
     <script type="text/javascript" src="../script/ydui.js"></script>
     <script type="text/javascript" src="../script/api.js"></script>
     <script type="text/javascript">
-        var api_url = "http://192.168.0.199/Core/Assets/AssetsAPI.ashx";
         var assets_idVal = 0;
         var androidNfc;
         apiready = function() {
@@ -28,7 +27,7 @@
                 if (ret.status) {
                     //alert(JSON.stringify("读取的卡号：" + ret.cardId));
                     api.ajax({
-                        url: api_url,
+                        url: serverConfig.url,
                         data: {
                             values: {
                                 type: 'GetByLabelExt',
@@ -87,7 +86,7 @@
             //alert(assets_no);
             //alert(label_id);
             api.ajax({
-                url: api_url,
+                url: serverConfig.url,
                 data: {
                     values: {
                         type: 'ConfirmReturn',
